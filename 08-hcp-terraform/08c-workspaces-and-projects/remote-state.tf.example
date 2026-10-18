@@ -1,0 +1,19 @@
+# Downstream workspace (`compute`) reading the `network` workspace outputs.
+# Run trigger: UI on compute, or tfe_run_trigger in run-trigger.tf.example (platform repo).
+# Not loaded by Terraform in this study tree.
+
+data "terraform_remote_state" "network" {
+  backend = "remote"
+
+  config = {
+    organization = "example-org"
+
+    workspaces = {
+      name = "network"
+    }
+  }
+}
+
+locals {
+  subnet_id = data.terraform_remote_state.network.outputs.subnet_id
+}

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Lesson 06 — bootstrap ≈ terraform init
+# Copy to 01-bootstrap.sh, adjust versions, run only on a disposable cluster.
+set -euo pipefail
+
+# --- terraform init analog: install core + providers ---
+# kind create cluster --name crossplane-learn
+
+helm repo add crossplane-stable https://charts.crossplane.io/stable
+helm upgrade --install crossplane crossplane-stable/crossplane \
+  -n crossplane-system --create-namespace --wait
+
+# Provider package (cluster admin) — like terraform init downloading aws provider
+kubectl apply -f ../02-provider-and-config/01-provider-package.yaml
+
+# Wait until provider revision is healthy (exact command varies by version)
+kubectl wait --for=condition=Healthy provider.pkg crossplane-provider-aws-s3 --timeout=300s 2>/dev/null || true
+
+# Credentials — ProviderConfig (lesson 02)
+kubectl apply -f ../02-provider-and-config/02-providerconfig-default.yaml
+
+echo "Bootstrap done. Next: 02-validate-and-diff.sh.example"

@@ -1,0 +1,14 @@
+# Lesson 06 — apply / destroy target (same concept as lesson 01)
+# Edit forProvider fields, then kubectl diff && kubectl apply to see reconcile.
+
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: example-workflow-logs
+  labels:
+    lesson: crossplane-examples-06
+spec:
+  forProvider:
+    region: eu-central-1
+  providerConfigRef:
+    name: default

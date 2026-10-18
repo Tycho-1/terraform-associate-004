@@ -1,0 +1,12 @@
+# Reads outputs from another state. The producer configuration must output vpc_id.
+# This data source does not manage those resources.
+
+data "terraform_remote_state" "network" {
+  backend = "s3"
+
+  config = {
+    bucket = "my-terraform-state"
+    key    = "network/terraform.tfstate"
+    region = "eu-central-1"
+  }
+}

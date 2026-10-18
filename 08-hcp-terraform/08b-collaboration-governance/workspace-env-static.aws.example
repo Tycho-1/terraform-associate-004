@@ -1,0 +1,7 @@
+# HCP Terraform workspace → Variables → Environment variables.
+# Mark each value Sensitive in the UI. Prefer dynamic credentials instead.
+# Not for Git. Guide: ../provider-credentials.md
+
+AWS_ACCESS_KEY_ID=AKIAEXAMPLE
+AWS_SECRET_ACCESS_KEY=example-secret-replace-me
+AWS_DEFAULT_REGION=eu-west-1

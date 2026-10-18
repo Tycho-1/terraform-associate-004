@@ -1,0 +1,18 @@
+# Lesson 04 — step 1
+# Terraform analog: prod.auto.tfvars or data sources only the platform module reads
+#
+#   vpc_id = "vpc-0abc..."
+#   default_tags = { Environment = "prod" }
+
+apiVersion: apiextensions.crossplane.io/v1beta1
+kind: EnvironmentConfig
+metadata:
+  name: platform-prod
+  labels:
+    environment: prod
+data:
+  awsRegion: eu-central-1
+  vpcId: vpc-0abc123example        # existing VPC — not created by this Claim
+  defaultTags:
+    Environment: prod
+    ManagedBy: crossplane-platform

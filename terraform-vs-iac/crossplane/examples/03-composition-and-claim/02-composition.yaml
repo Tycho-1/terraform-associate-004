@@ -1,0 +1,32 @@
+# Lesson 03 — step 2
+# Terraform analog: modules/pet/main.tf body — caller cannot edit this file.
+
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: storagebucket-aws
+  labels:
+    purpose: storage
+spec:
+  compositeTypeRef:
+    apiVersion: example.io/v1alpha1
+    kind: StorageBucket
+  mode: Resources
+  resources:
+    - name: bucket
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider: {}
+          providerConfigRef:
+            name: default
+      patches:
+        # Claim.spec.region → MR.spec.forProvider.region  (like var.region → resource argument)
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.region
+          toFieldPath: spec.forProvider.region
+        # Platform tag from Claim.spec.purpose
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.purpose
+          toFieldPath: metadata.labels[purpose]

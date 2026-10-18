@@ -1,0 +1,8 @@
+# Policy set manifest for HCP Terraform / Terraform Enterprise policy sets.
+# Upload policies + this file when creating the policy set in the UI or VCS.
+# Not loaded by Terraform in this study tree.
+
+policy "s3-private-and-encrypted" {
+  source            = "./s3-private-and-encrypted.sentinel"
+  enforcement_level = "hard-mandatory"
+}

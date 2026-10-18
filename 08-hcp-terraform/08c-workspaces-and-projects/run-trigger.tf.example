@@ -1,0 +1,44 @@
+# Platform / bootstrap repo: wires HCP Terraform workspaces together.
+# Not loaded by Terraform in this study tree. Requires hashicorp/tfe and a TFE_TOKEN.
+#
+# Run trigger as code = predefined resource type "tfe_run_trigger" from provider hashicorp/tfe.
+# That is HCP/TFE platform metadata (like tfe_workspace), NOT an aws_* / google_* cloud resource.
+# Same link as UI: Workspace compute → Settings → Run triggers. Alternative: configure only in UI/API.
+#
+# After network applies successfully, compute gets a queued run.
+# The compute stack still uses remote-state.tf.example to read network outputs.
+
+terraform {
+  required_providers {
+    tfe = {
+      source  = "hashicorp/tfe"
+      version = "~> 0.58"
+    }
+  }
+}
+
+provider "tfe" {
+  hostname = "app.terraform.io"
+  # token from TFE_TOKEN or terraform login (API token)
+}
+
+data "tfe_organization" "main" {
+  name = "example-org"
+}
+
+data "tfe_workspace" "network" {
+  name         = "network"
+  organization = data.tfe_organization.main.name
+}
+
+data "tfe_workspace" "compute" {
+  name         = "compute"
+  organization = data.tfe_organization.main.name
+}
+
+# Downstream = workspace_id; source = upstream that finished apply
+resource "tfe_run_trigger" "network_to_compute" {
+  workspace_id    = data.tfe_workspace.compute.id
+  sourceable_id   = data.tfe_workspace.network.id
+  sourceable_type = "tfe_workspace"
+}

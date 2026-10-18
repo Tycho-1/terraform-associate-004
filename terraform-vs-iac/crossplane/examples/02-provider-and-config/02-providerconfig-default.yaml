@@ -1,0 +1,11 @@
+# Lesson 02 — step 2
+# Terraform analog: provider "aws" { region = "eu-central-1" } + env/credentials chain
+
+apiVersion: aws.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: IRSA   # EKS: prefer workload identity over static keys
+  # region and other defaults may live here or on each MR forProvider.region

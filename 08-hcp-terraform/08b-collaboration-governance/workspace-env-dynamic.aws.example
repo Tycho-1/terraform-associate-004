@@ -1,0 +1,9 @@
+# HCP Terraform workspace → Variables → Environment variables (not committed to Git).
+# Requires IAM trust from AWS to HCP OIDC for the organization/workspace.
+# Full guide: ../provider-credentials.md
+
+TFC_AWS_PROVIDER_AUTH=true
+TFC_AWS_RUN_ROLE_ARN=arn:aws:iam::123456789012:role/terraform-run
+
+# Optional: different IAM role for plan vs apply
+# TFC_AWS_PLAN_ROLE_ARN=arn:aws:iam::123456789012:role/terraform-plan

@@ -1,0 +1,45 @@
+# Teaching policy — attach via sentinel-policy-set.hcl.example in HCP Terraform.
+# Inspects the Terraform plan (tfplan/v2) before apply.
+# Not executed in this study repo.
+
+import "tfplan/v2" as tfplan
+
+# Buckets created in this plan
+new_buckets = filter tfplan.resource_changes as _, rc {
+  rc.type is "aws_s3_bucket" and rc.change.actions contains "create"
+}
+
+public_access_blocks = filter tfplan.resource_changes as _, rc {
+  rc.type is "aws_s3_bucket_public_access_block"
+}
+
+sse_configs = filter tfplan.resource_changes as _, rc {
+  rc.type is "aws_s3_bucket_server_side_encryption_configuration"
+}
+
+# Every public access block in the plan must fully block public access
+public_access_ok = rule {
+  all public_access_blocks as _, r {
+    r.change.after.block_public_acls is true and
+    r.change.after.block_public_policy is true and
+    r.change.after.ignore_public_acls is true and
+    r.change.after.restrict_public_buckets is true
+  }
+}
+
+# Every SSE configuration in the plan must enable default encryption
+encryption_ok = rule {
+  all sse_configs as _, r {
+    length(r.change.after.rule) > 0 and
+    r.change.after.rule[0].apply_server_side_encryption_by_default[0].sse_algorithm in ["AES256", "aws:kms"]
+  }
+}
+
+# If we create a bucket, the plan must also include companion controls (simplified pairing)
+companion_resources_present = rule {
+  length(new_buckets) is 0 or (length(public_access_blocks) > 0 and length(sse_configs) > 0)
+}
+
+main = rule {
+  public_access_ok and encryption_ok and companion_resources_present
+}

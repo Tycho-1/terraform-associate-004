@@ -1,0 +1,32 @@
+# Lesson 04 — step 2
+# Terraform analog: resource "aws_instance" { subnet_id = data.aws_subnet.selected.id }
+#
+# Composition selects EnvironmentConfig (by ref or labels) and patches into MR spec.
+# This is a FRAGMENT — merge patches into your real Composition from lesson 03.
+
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: storagebucket-aws-with-env
+spec:
+  compositeTypeRef:
+    apiVersion: example.io/v1alpha1
+    kind: StorageBucket
+  mode: Resources
+  environment:
+    environmentConfigs:
+      - type: Reference
+        ref:
+          name: platform-prod
+  resources:
+    - name: bucket
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        spec:
+          forProvider: {}
+      patches:
+        - type: FromEnvironmentFieldPath
+          fromFieldPath: awsRegion
+          toFieldPath: spec.forProvider.region
+        # vpcId might feed a different MR (e.g. security group) in a fuller platform bundle

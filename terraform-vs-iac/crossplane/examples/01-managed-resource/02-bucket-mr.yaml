@@ -1,0 +1,22 @@
+# Lesson 01 — step 2
+# Terraform analog:
+#
+#   resource "aws_s3_bucket" "logs" {
+#     bucket = "my-platform-logs-example"
+#     region = "eu-central-1"
+#   }
+#
+# One MR ≈ one resource block. Reconcile is continuous after apply.
+
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: example-logs          # Kubernetes name (not always == bucket name in cloud)
+  labels:
+    lesson: crossplane-examples-01
+spec:
+  forProvider:
+    region: eu-central-1
+    # bucket name often derived from metadata or forProvider; provider docs define rules
+  providerConfigRef:
+    name: default               # which cloud account / credentials

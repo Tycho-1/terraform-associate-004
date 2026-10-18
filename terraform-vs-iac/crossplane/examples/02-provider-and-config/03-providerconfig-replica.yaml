@@ -1,0 +1,10 @@
+# Lesson 02 — step 3
+# Terraform analog: provider "aws" { alias = "replica" region = "us-west-2" }
+
+apiVersion: aws.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: replica
+spec:
+  credentials:
+    source: IRSA

@@ -1,0 +1,39 @@
+# Sketch of one configuration managing two clouds.
+# This file is for reading. It needs real credentials and a real subscription to apply.
+# The runnable multi-provider lab is 02-fundamentals/02c-multiple-providers.
+
+terraform {
+  required_version = ">= 1.12.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "eu-central-1"
+}
+
+provider "azurerm" {
+  features {}
+}
+
+resource "aws_vpc" "shared" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "shared"
+  }
+}
+
+resource "azurerm_resource_group" "app" {
+  name     = "app"
+  location = "westeurope"
+}

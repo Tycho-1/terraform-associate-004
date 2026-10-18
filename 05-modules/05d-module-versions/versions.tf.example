@@ -1,0 +1,15 @@
+# Registry module pin. Not loaded by Terraform (the suffix is .example).
+# version is valid here because source is a public registry address.
+# The same argument on source = "./modules/pet" is an error.
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 5.13.0"
+
+  name = "demo"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["eu-central-1a", "eu-central-1b"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+}

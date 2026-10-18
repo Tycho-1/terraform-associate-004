@@ -1,0 +1,13 @@
+# One cloud block per configuration; mutually exclusive with any backend block.
+# Rules and invalid examples: cloud-block-rules.md in this folder.
+# Not loaded by Terraform in this study tree. `terraform login`, then `terraform init`.
+
+terraform {
+  cloud {
+    organization = "example-org"
+
+    workspaces {
+      name = "local-stack"
+    }
+  }
+}

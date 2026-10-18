@@ -1,0 +1,23 @@
+# Lesson 03 — step 3
+# Terraform analog:
+#
+#   module "pet" {
+#     source = "git::...//modules/pet"
+#     prefix = "web"
+#     length = 2
+#   }
+#
+# App team only edits this file (or Helm values / Kustomize overlay).
+
+apiVersion: example.io/v1alpha1
+kind: StorageBucketClaim
+metadata:
+  name: team-orders-logs
+  namespace: team-orders
+spec:
+  compositionSelector:
+    matchLabels:
+      purpose: storage
+  # XRD allows only these inputs (like module variables):
+  region: eu-central-1
+  purpose: logs

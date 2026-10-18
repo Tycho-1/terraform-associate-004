@@ -1,0 +1,12 @@
+# Lesson 02 — step 4
+# Terraform analog: resource "aws_s3_bucket" "x" { provider = aws.replica ... }
+
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: example-replica-region
+spec:
+  forProvider:
+    region: us-west-2
+  providerConfigRef:
+    name: replica

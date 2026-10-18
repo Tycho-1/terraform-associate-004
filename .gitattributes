@@ -1,0 +1,7 @@
+# Normalize line endings for cross-platform clones
+* text=auto eol=lf
+
+*.tf linguist-language=HCL
+*.tfvars linguist-language=HCL
+*.tftpl linguist-language=HCL
+*.sentinel linguist-language=Ruby

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Lesson 06 — wait for reconcile ≈ "apply finished successfully"
+set -euo pipefail
+
+NAME=example-workflow-logs
+
+# Managed resources expose standard conditions (Ready, Synced — exact set varies by provider)
+kubectl wait --for=condition=Ready "bucket/${NAME}" --timeout=600s 2>/dev/null || \
+  kubectl get "bucket/${NAME}" -o jsonpath='{.status.conditions}' | jq .
+
+kubectl get "bucket/${NAME}" -o yaml | sed -n '/conditions:/,/^[a-z]/p'

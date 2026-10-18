@@ -1,0 +1,11 @@
+# Declarative import. Not loaded by Terraform.
+# plan -generate-config-out writes the resource block from the live instance.
+# apply records the instance in state. It does not create a second instance.
+
+import {
+  to = aws_instance.web
+  id = "i-0123456789abcdef0"
+}
+
+# Equivalent imperative command, after the resource block exists:
+#   terraform import aws_instance.web i-0123456789abcdef0

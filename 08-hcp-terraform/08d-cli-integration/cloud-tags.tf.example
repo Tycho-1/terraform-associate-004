@@ -1,0 +1,14 @@
+# One cloud block; workspaces selected by tag (not by name).
+# At init / run time pick which HCP workspace: TF_WORKSPACE or terraform workspace select
+# (HCP workspace name, not CLI workspace feature when cloud is configured).
+# Not loaded by Terraform in this study tree.
+
+terraform {
+  cloud {
+    organization = "example-org"
+
+    workspaces {
+      tags = ["prod", "networking"]
+    }
+  }
+}

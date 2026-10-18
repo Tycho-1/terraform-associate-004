@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Lesson 06 — validate + plan analog
+set -euo pipefail
+
+MANIFEST=03-bucket-workflow.yaml
+
+# terraform validate — syntax + API schema on server
+kubectl apply --dry-run=server -f "$MANIFEST"
+
+# terraform plan — show what would change on the API object (not full cloud diff)
+kubectl diff -f "$MANIFEST" || true   # diff exits 1 when changes exist
+
+echo "If diff shows changes, run: kubectl apply -f $MANIFEST"

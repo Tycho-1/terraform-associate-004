@@ -1,0 +1,12 @@
+# Remote state in S3. Not loaded by Terraform.
+# One backend per configuration. Arguments are literals: var.bucket is invalid here.
+# use_lockfile stores the lock in the same bucket. Older configs used dynamodb_table.
+
+terraform {
+  backend "s3" {
+    bucket       = "my-terraform-state"
+    key          = "network/terraform.tfstate"
+    region       = "eu-central-1"
+    use_lockfile = true
+  }
+}
